@@ -9,34 +9,34 @@ import {
   MyLocation
 } from '@ionic-native/google-maps';
 
-import {SecondPage} from "../second/second";
-
-const CAMERA_DEFAULT_LAT = 47.497912;
-const CAMERA_DEFAULT_LONG = 19.040235;
+const CAMERA_DEFAULT_LAT = 40.771133;
+const CAMERA_DEFAULT_LONG = -73.974187;
 const CAMERA_DEFAULT_ZOOMLEVEL = 13;
 
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-second',
+  templateUrl: 'second.html'
 })
-export class HomePage {
+export class SecondPage {
 
   mapReady: boolean = false;
   map: GoogleMap;
 
 
   constructor(public navCtrl: NavController) {
+
   }
 
-  ionViewDidLoad() {
-    console.log('HomePage: ionViewDidLoad');
+
+  ionViewDidEnter() {
+    console.log('SecondPage: ionViewDidEnter()');
     this.loadMap();
   }
 
   loadMap() {
-    console.log('HomePage: loadMap()');
-    this.map = GoogleMaps.create('map_canvas', {
+    console.log('SecondPage: loadMap()');
+    this.map = GoogleMaps.create('map_second', {
       'mapType': 'MAP_TYPE_NORMAL',
       'controls': {
         'compass': true,
@@ -50,6 +50,21 @@ export class HomePage {
         'rotate': true,
         'zoom': true
       },
+      'styles': [
+        {
+          featureType: "all",
+          stylers: [
+            {saturation: -80}
+          ]
+        },
+        {
+          featureType: "poi.business",
+          elementType: "labels",
+          stylers: [
+            {visibility: "off"}
+          ]
+        }
+      ],
       'camera': {
         target: {
           lat: CAMERA_DEFAULT_LAT,
@@ -68,26 +83,14 @@ export class HomePage {
 
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
       this.mapReady = true;
-      console.log('HomePage: map is ready...');
+      console.log('SecondPage: map is ready...');
     });
 
   }
 
   ionViewWillLeave() {
-    console.log('HomePage: ionViewWillLeave()');
-    this.map.setDiv(null);
+    console.log('SecondPage: ionViewWillLeave()');
+    this.map.destroy();
   }
 
-  ionViewDidEnter() {
-    console.log('HomePage: ionViewDidEnter()');
-    if (this.map) {
-      this.map.setDiv('map_canvas');
-    }
-  }
-
-  openSecondPage() {
-    console.log('HomePage: openSecondPage()');
-    this.navCtrl.push(SecondPage);
-  }
-
-  }
+}
