@@ -4,14 +4,19 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Home</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="displayToast()">
+        Show toast
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content no-padding no-border no-margin>
 
-  <button ion-button secondary (click)="openSecondPage()">Open Second Page</button>
   <div id="map_canvas">
   </div>
+  <button ion-button secondary (click)="openSecondPage()">Open Second Page</button>
 
 
 </ion-content>

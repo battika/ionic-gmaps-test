@@ -6,7 +6,8 @@ import {
   GoogleMapsEvent,
   Marker,
   GoogleMapsAnimation,
-  MyLocation
+  MyLocation,
+  Environment
 } from '@ionic-native/google-maps';
 
 const CAMERA_DEFAULT_LAT = 40.771133;
