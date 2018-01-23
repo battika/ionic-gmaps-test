@@ -30,6 +30,7 @@ export class HomePage {
 
   mapReady: boolean = false;
   map: GoogleMap = null;
+  firstLoad: boolean = true;
   radarPos: ILatLng = {lat: CAMERA_DEFAULT_LAT, lng: CAMERA_DEFAULT_LONG};
   radarRadius = 400;
   radarObj: any;
@@ -108,8 +109,10 @@ export class HomePage {
 
   ionViewDidEnter() {
     console.log('HomePage: ionViewDidEnter()');
-    if (this.map) {
+    if (!this.firstLoad) {
       this.map.setDiv('map_canvas');
+    } else {
+      this.firstLoad = false;
     }
   }
 
@@ -151,6 +154,22 @@ export class HomePage {
   openSecondPage() {
     console.log('HomePage: openSecondPage()');
     this.navCtrl.push(SecondPage);
+  }
+
+  getUserLocation() {
+    console.log('HomePage: getUserLocation()');
+    try {
+      this.map.getMyLocation().then((result) => {
+        console.log(JSON.stringify(result));
+      },
+          (err) => {
+        console.log(JSON.stringify(err));
+          }
+      );
+
+    } catch (e) {
+      console.log(JSON.stringify(e));
+    }
   }
 
   }
