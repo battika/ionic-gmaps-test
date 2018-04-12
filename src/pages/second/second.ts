@@ -26,9 +26,7 @@ export class SecondPage {
 
 
   constructor(public navCtrl: NavController) {
-
   }
-
 
   ionViewDidEnter() {
     console.log('SecondPage: ionViewDidEnter()');
@@ -38,20 +36,20 @@ export class SecondPage {
   loadMap() {
     console.log('SecondPage: loadMap()');
     this.map = GoogleMaps.create('map_second', {
-      'mapType': 'MAP_TYPE_NORMAL',
-      'controls': {
-        'compass': true,
-        'myLocationButton': true,
-        'indoorPicker': false,
-        'zoom': true
+      mapType: 'MAP_TYPE_NORMAL',
+      controls: {
+        compass: true,
+        myLocationButton: true,
+        indoorPicker: false,
+        zoom: true
       },
-      'gestures': {
-        'scroll': true,
-        'tilt': false,
-        'rotate': true,
-        'zoom': true
+      gestures: {
+        scroll: true,
+        tilt: false,
+        rotate: true,
+        zoom: true
       },
-      'styles': [
+      styles: [
         {
           featureType: "all",
           stylers: [
@@ -66,19 +64,19 @@ export class SecondPage {
           ]
         }
       ],
-      'camera': {
+      camera: {
         target: {
           lat: CAMERA_DEFAULT_LAT,
           lng: CAMERA_DEFAULT_LONG
         },
         zoom: CAMERA_DEFAULT_ZOOMLEVEL
       },
-      'preferences': {
-        'zoom': {
-          'minZoom': 10,
-          'maxZoom': 18
+      preferences: {
+        zoom: {
+          minZoom: 10,
+          maxZoom: 18
         },
-        'building': false
+        building: false
       }
     });
 
@@ -91,7 +89,11 @@ export class SecondPage {
 
   ionViewWillLeave() {
     console.log('SecondPage: ionViewWillLeave()');
+    /* According to Google Maps plugin's developer destroying the map
+    is not needed, as soon as the containing HTML element is removed the map will be destroyed...
+    However, it is still possible to destroy it manually if you like...
     this.map.destroy();
+    */
   }
 
 }

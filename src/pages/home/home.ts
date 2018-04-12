@@ -4,13 +4,15 @@ import {
   GoogleMaps,
   GoogleMap,
   GoogleMapsEvent,
+  LocationService,
+  MyLocationOptions,
   Marker,
   GoogleMapsAnimation,
   MyLocation,
   ILatLng
 } from '@ionic-native/google-maps';
 
-import { ToastController } from 'ionic-angular';
+import { ToastController, Platform } from 'ionic-angular';
 
 import {SecondPage} from "../second/second";
 
@@ -31,89 +33,94 @@ export class HomePage {
   mapReady: boolean = false;
   map: GoogleMap = null;
   firstLoad: boolean = true;
-  radarPos: ILatLng = {lat: CAMERA_DEFAULT_LAT, lng: CAMERA_DEFAULT_LONG};
-  radarRadius = 400;
-  radarObj: any;
-
 
   constructor(public navCtrl: NavController,
-              private toastCtrl: ToastController) {
+              private toastCtrl: ToastController,
+              private platform: Platform) {
+
+    this.setupEventListeners();
+  }
+
+  setupEventListeners() {
+    console.log('HomePage: setupEventListeners()');
+    this.platform.pause.subscribe(() => {
+      console.info('Application is in running in the background...');
+    });
+
+    this.platform.resume.subscribe(() => {
+      console.info('Application is in running in the foreground...');
+    });
   }
 
   ionViewDidLoad() {
-    console.log('HomePage: ionViewDidLoad');
+    console.log('HomePage: ionViewDidLoad()');
     this.loadMap();
   }
 
   loadMap() {
     console.log('HomePage: loadMap()');
     this.map = GoogleMaps.create('map_canvas', {
-      'mapType': 'MAP_TYPE_NORMAL',
-      'controls': {
-        'compass': true,
-        'myLocationButton': true,
-        'indoorPicker': false,
-        'zoom': true
+      mapType: "MAP_TYPE_NORMAL",
+      controls: {
+        compass: false,
+        myLocation: true,
+        myLocationButton: false,
+        zoom: true
       },
-      'gestures': {
-        'scroll': true,
-        'tilt': false,
-        'rotate': true,
-        'zoom': true
+      gestures: {
+        scroll: true,
+        tilt: false,
+        rotate: true,
+        zoom: true
       },
-      'camera': {
+      camera: {
         target: {
           lat: CAMERA_DEFAULT_LAT,
           lng: CAMERA_DEFAULT_LONG
         },
         zoom: CAMERA_DEFAULT_ZOOMLEVEL
       },
-      'preferences': {
-        'zoom': {
-          'minZoom': 10,
-          'maxZoom': 18
+      preferences: {
+        zoom: {
+          minZoom: 10,
+          maxZoom: 18
         },
-        'building': false
+        building: false
       }
     });
 
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
       this.mapReady = true;
       console.log('HomePage: map is ready...');
-/*    this.map.on(GoogleMapsEvent.CAMERA_MOVE).subscribe(
-        (pos) => {
-          this.setRadar();
-        }
-    );
-
-
-      this.map.on(GoogleMapsEvent.CAMERA_MOVE_START).subscribe(
-          (pos) => {
-            this.setRadar();
-          }
-      );
-
-      this.map.on(GoogleMapsEvent.CAMERA_MOVE_END).subscribe(
-          (pos) => {
-            this.setRadar();
-          }
-      );*/
     });
 
   }
 
   ionViewWillLeave() {
     console.log('HomePage: ionViewWillLeave()');
+    /* According to Google Maps plugin's developer hiding the map
+    is no longer needed from version 2.2.8 as the plugin takes care of hiding/showing the map automatically.
+    However, it is still possible to hide it manually if needed...
+
+*/
     this.map.setDiv(null);
+
   }
 
   ionViewDidEnter() {
     console.log('HomePage: ionViewDidEnter()');
+    /*
+    According to Google Maps plugin's developer starting with version 2.2.8
+    the plugin takes care of hiding/showing the map automatically, so this code
+    is no longer necessary, however can be used if needed.
+*/
+
     if (!this.firstLoad) {
       this.map.setDiv('map_canvas');
     } else {
       this.firstLoad = false;
     }
+
   }
 
   displayToast() {
@@ -131,25 +138,6 @@ export class HomePage {
     toast.present();
   }
 
-  setRadar() {
-    this.radarPos = this.map.getCameraTarget();
-    if (!this.radarObj) {
-      this.map.addCircle({
-        center: this.radarPos,
-        radius: this.radarRadius,
-        strokeColor: POLYGON_STROKE_COLOR,
-        fillColor: POLYGON_FILL_COLOR,
-        strokeWidth: POLYGON_STROKE_WIDTH
-      }).then(
-          (obj) => {
-            this.radarObj = obj;
-          }
-      );
-    } else {
-      this.radarObj.setCenter(this.radarPos);
-    }
-
-  }
 
   openSecondPage() {
     console.log('HomePage: openSecondPage()');
@@ -158,18 +146,16 @@ export class HomePage {
 
   getUserLocation() {
     console.log('HomePage: getUserLocation()');
-    try {
-      this.map.getMyLocation().then((result) => {
-        console.log(JSON.stringify(result));
-      },
-          (err) => {
-        console.log(JSON.stringify(err));
-          }
-      );
-
-    } catch (e) {
-      console.log(JSON.stringify(e));
+    LocationService.getMyLocation({enableHighAccuracy: true}).then(
+        (result) => {
+          console.log(JSON.stringify(result));
+        },
+        (err) => {
+          console.error(JSON.stringify(err));
+        }
+    ).catch((e) => {
+      console.error(JSON.stringify(e));
+    });
     }
-  }
 
   }
