@@ -59,7 +59,7 @@
         "API_KEY_FOR_IOS": "xxxxx",
         "LOCATION_WHEN_IN_USE_DESCRIPTION": "This app wants to get your location while this app runs only.",
         "LOCATION_ALWAYS_USAGE_DESCRIPTION": "This app wants to get your location always, even this app runs in background.",
-        "PLAY_SERVICES_VERSION": "11.8.0",
+        "PLAY_SERVICES_VERSION": "12.0.1",
         "ANDROID_SUPPORT_V4_VERSION": "24.1.0"
       }
     },
