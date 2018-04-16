@@ -3,11 +3,7 @@ import { NavController } from 'ionic-angular';
 import {
   GoogleMaps,
   GoogleMap,
-  GoogleMapsEvent,
-  Marker,
-  GoogleMapsAnimation,
-  MyLocation,
-  Environment
+  GoogleMapsEvent
 } from '@ionic-native/google-maps';
 
 const CAMERA_DEFAULT_LAT = 40.771133;

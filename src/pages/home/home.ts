@@ -4,12 +4,7 @@ import {
   GoogleMaps,
   GoogleMap,
   GoogleMapsEvent,
-  LocationService,
-  MyLocationOptions,
-  Marker,
-  GoogleMapsAnimation,
-  MyLocation,
-  ILatLng
+  LocationService
 } from '@ionic-native/google-maps';
 
 import { ToastController, Platform } from 'ionic-angular';
@@ -98,22 +93,17 @@ export class HomePage {
 
   ionViewWillLeave() {
     console.log('HomePage: ionViewWillLeave()');
+
     /* According to Google Maps plugin's developer hiding the map
     is no longer needed from version 2.2.8 as the plugin takes care of hiding/showing the map automatically.
     However, it is still possible to hide it manually if needed...
 
-*/
     this.map.setDiv(null);
-
+*/
   }
 
   ionViewDidEnter() {
     console.log('HomePage: ionViewDidEnter()');
-    /*
-    According to Google Maps plugin's developer starting with version 2.2.8
-    the plugin takes care of hiding/showing the map automatically, so this code
-    is no longer necessary, however can be used if needed.
-*/
 
     if (!this.firstLoad) {
       this.map.setDiv('map_canvas');
@@ -141,7 +131,7 @@ export class HomePage {
 
   openSecondPage() {
     console.log('HomePage: openSecondPage()');
-    this.navCtrl.push(SecondPage);
+    this.navCtrl.push(SecondPage,{},{animate:false});
   }
 
   getUserLocation() {
