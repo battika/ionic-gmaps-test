@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {AlertController, NavController} from 'ionic-angular';
 import {
   GoogleMaps,
   GoogleMap,
   GoogleMapsEvent,
-  LocationService
+  LocationService, GoogleMapOptions, Environment
 } from '@ionic-native/google-maps';
 
-import { ToastController, Platform } from 'ionic-angular';
+import {ToastController, Platform} from 'ionic-angular';
 
 import {SecondPage} from "../second/second";
 
@@ -29,10 +29,11 @@ export class HomePage {
   map: GoogleMap = null;
   firstLoad: boolean = true;
 
-  constructor(public navCtrl: NavController,
+  constructor(private navCtrl: NavController,
               private toastCtrl: ToastController,
-              private platform: Platform) {
-
+              private alertCtrl: AlertController,
+              private platform: Platform)
+  {
     this.setupEventListeners();
   }
 
@@ -86,7 +87,7 @@ export class HomePage {
 
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
       this.mapReady = true;
-      console.log('HomePage: map is ready...');
+      console.log('HomePage: map is ready.....');
     });
 
   }
@@ -94,23 +95,15 @@ export class HomePage {
   ionViewWillLeave() {
     console.log('HomePage: ionViewWillLeave()');
 
-    /* According to Google Maps plugin's developer hiding the map
-    is no longer needed from version 2.2.8 as the plugin takes care of hiding/showing the map automatically.
-    However, it is still possible to hide it manually if needed...
-
-    this.map.setDiv(null);
-*/
   }
 
   ionViewDidEnter() {
     console.log('HomePage: ionViewDidEnter()');
-
     if (!this.firstLoad) {
       this.map.setDiv('map_canvas');
     } else {
       this.firstLoad = false;
     }
-
   }
 
   displayToast() {
@@ -131,21 +124,33 @@ export class HomePage {
 
   openSecondPage() {
     console.log('HomePage: openSecondPage()');
-    this.navCtrl.push(SecondPage,{},{animate:false});
+    this.navCtrl.setRoot(SecondPage, {}, {animate: false});
   }
 
-  getUserLocation() {
-    console.log('HomePage: getUserLocation()');
-    LocationService.getMyLocation({enableHighAccuracy: true}).then(
-        (result) => {
-          console.log(JSON.stringify(result));
-        },
-        (err) => {
-          console.error(JSON.stringify(err));
-        }
-    ).catch((e) => {
-      console.error(JSON.stringify(e));
+  hideMap() {
+    console.log('HomePage: hideMap()');
+    this.map.setDiv();
+  }
+
+  showMap() {
+    console.log('HomePage: showMap()');
+    this.map.setDiv('map_canvas');
+  }
+
+  showDiv() {
+    console.log('HomePage: showDiv()');
+    const usedDiv = this.map.getDiv() ? this.map.getDiv().id : 'No div specified...';
+    const alertCtrl = this.alertCtrl.create({
+      title: 'Used div',
+      subTitle: 'Your map is using the following div',
+      message: JSON.stringify(usedDiv),
+      buttons: [
+        {text: 'Dismiss'}
+      ]
     });
-    }
+
+    alertCtrl.present();
 
   }
+
+}

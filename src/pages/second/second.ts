@@ -5,6 +5,7 @@ import {
   GoogleMap,
   GoogleMapsEvent
 } from '@ionic-native/google-maps';
+import {HomePage} from "../home/home";
 
 const CAMERA_DEFAULT_LAT = 40.771133;
 const CAMERA_DEFAULT_LONG = -73.974187;
@@ -85,11 +86,10 @@ export class SecondPage {
 
   ionViewWillLeave() {
     console.log('SecondPage: ionViewWillLeave()');
-    /* According to Google Maps plugin's developer destroying the map
-    is not needed, as soon as the containing HTML element is removed the map will be destroyed...
-    However, it is still possible to destroy it manually if you like...
-    this.map.destroy();
-    */
+  }
+
+  goBackFirst() {
+    this.navCtrl.setRoot(HomePage);
   }
 
 }
