@@ -4,7 +4,7 @@ import {
   GoogleMaps,
   GoogleMap,
   GoogleMapsEvent,
-  LocationService, GoogleMapOptions, Environment
+  LocationService, GoogleMapOptions, Environment, MarkerOptions
 } from '@ionic-native/google-maps';
 
 import {ToastController, Platform} from 'ionic-angular';
@@ -135,6 +135,18 @@ export class HomePage {
   showMap() {
     console.log('HomePage: showMap()');
     this.map.setDiv('map_canvas');
+  }
+
+  addNewMarker() {
+    console.log('HomePage: addNewMarker()');
+    this.map.addMarkerSync(
+        {
+          position: {lng: CAMERA_DEFAULT_LONG, lat: CAMERA_DEFAULT_LAT},
+          draggable: true,
+          icon: 'green'
+        } as MarkerOptions
+    );
+
   }
 
   showDiv() {
