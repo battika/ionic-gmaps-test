@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
+import {AlertController, Events, NavController} from 'ionic-angular';
 import {
   GoogleMaps,
   GoogleMap,
@@ -10,6 +10,7 @@ import {
 import {ToastController, Platform} from 'ionic-angular';
 
 import {SecondPage} from "../second/second";
+import {MapControllerProvider, MapInstance} from "../../providers/map-controller";
 
 const CAMERA_DEFAULT_LAT = 47.497912;
 const CAMERA_DEFAULT_LONG = 19.040235;
@@ -18,6 +19,7 @@ const POLYGON_STROKE_COLOR = '#73922a70';
 const POLYGON_FILL_COLOR = '#8fbf1c20';
 const POLYGON_STROKE_WIDTH = 2;
 
+const mapId = 'HOME_MAP';
 
 @Component({
   selector: 'page-home',
@@ -25,11 +27,11 @@ const POLYGON_STROKE_WIDTH = 2;
 })
 export class HomePage {
 
-  mapReady: boolean = false;
-  map: GoogleMap = null;
-  firstLoad: boolean = true;
+  private hMap: MapInstance;
 
   constructor(private navCtrl: NavController,
+              private events: Events,
+              private mapCtrl: MapControllerProvider,
               private toastCtrl: ToastController,
               private alertCtrl: AlertController,
               private platform: Platform)
@@ -48,14 +50,16 @@ export class HomePage {
     });
   }
 
-  ionViewDidLoad() {
-    console.log('HomePage: ionViewDidLoad()');
-    this.loadMap();
+  ionViewWillLeave() {
+    console.log('HomePage: ionViewWillLeave()');
+    this.hMap.hide();
+    this.events.unsubscribe('MARKER.CLICK', this._handleMarkerClick);
   }
 
-  loadMap() {
-    console.log('HomePage: loadMap()');
-    this.map = GoogleMaps.create('map_canvas', {
+  ionViewDidLoad() {
+    console.log('HomePage: ionViewDidLoad()');
+
+    const newMapOptions: GoogleMapOptions = {
       mapType: "MAP_TYPE_NORMAL",
       controls: {
         compass: false,
@@ -83,27 +87,23 @@ export class HomePage {
         },
         building: false
       }
-    });
+    };
 
-    this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-      this.mapReady = true;
-      console.log('HomePage: map is ready.....');
-    });
-
-  }
-
-  ionViewWillLeave() {
-    console.log('HomePage: ionViewWillLeave()');
-
+    this.hMap = this.mapCtrl.addMap('HOME', 'map_canvas', newMapOptions );
   }
 
   ionViewDidEnter() {
     console.log('HomePage: ionViewDidEnter()');
-    if (!this.firstLoad) {
-      this.map.setDiv('map_canvas');
-    } else {
-      this.firstLoad = false;
-    }
+    this.platform.ready().then(
+        () => {
+          this.hMap.show();
+          this.events.subscribe('MARKER.CLICK', this._handleMarkerClick);
+        }
+    );
+  }
+
+  private _handleMarkerClick(evtData) {
+    console.log(JSON.stringify(evtData));
   }
 
   displayToast() {
@@ -129,40 +129,18 @@ export class HomePage {
 
   hideMap() {
     console.log('HomePage: hideMap()');
-    this.map.setDiv();
+    this.hMap.hide();
   }
 
   showMap() {
     console.log('HomePage: showMap()');
-    this.map.setDiv('map_canvas');
+    this.hMap.show();
   }
 
   addNewMarker() {
     console.log('HomePage: addNewMarker()');
-    this.map.addMarkerSync(
-        {
-          position: {lng: CAMERA_DEFAULT_LONG, lat: CAMERA_DEFAULT_LAT},
-          draggable: true,
-          icon: 'green'
-        } as MarkerOptions
-    );
-
+    //this.hMap.addMarker();
   }
 
-  showDiv() {
-    console.log('HomePage: showDiv()');
-    const usedDiv = this.map.getDiv() ? this.map.getDiv().id : 'No div specified...';
-    const alertCtrl = this.alertCtrl.create({
-      title: 'Used div',
-      subTitle: 'Your map is using the following div',
-      message: JSON.stringify(usedDiv),
-      buttons: [
-        {text: 'Dismiss'}
-      ]
-    });
-
-    alertCtrl.present();
-
-  }
 
 }

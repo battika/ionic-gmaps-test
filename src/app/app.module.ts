@@ -10,6 +10,7 @@ import {SecondPage} from "../pages/second/second"
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {GoogleMaps} from "@ionic-native/google-maps";
+import {MapControllerProvider} from "../providers/map-controller";
 
 @NgModule({
   declarations: [
@@ -33,10 +34,11 @@ import {GoogleMaps} from "@ionic-native/google-maps";
   ],
   providers: [
     GoogleMaps,
+    MapControllerProvider,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
-    ]
+  ]
 })
 export class AppModule {
 }

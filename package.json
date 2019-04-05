@@ -7,7 +7,8 @@
   "scripts": {
     "clean": "ionic-app-scripts clean",
     "build": "ionic-app-scripts build",
-    "lint": "ionic-app-scripts lint"
+    "lint": "ionic-app-scripts lint",
+    "iphone7": "ionic cordova run ios -lc --debug --target=\"iPhone-7\" -- --buildFlag=\"-UseModernBuildSystem=0\""
   },
   "dependencies": {
     "@angular/common": "^5.2.11",
@@ -25,40 +26,44 @@
     "@ionic/storage": "2.1.3",
     "cordova-android": "7.1.4",
     "cordova-browser": "5.0.4",
-    "cordova-plugin-device": "^1.1.7",
-    "cordova-plugin-googlemaps": "^2.5.1",
-    "cordova-plugin-ionic-webview": "^1.2.0",
-    "cordova-plugin-splashscreen": "^4.1.0",
+    "cordova-ios": "4.5.5",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-googlemaps": "^2.5.3",
+    "cordova-plugin-ionic-keyboard": "^2.1.3",
+    "cordova-plugin-ionic-webview": "^4.0.1",
+    "cordova-plugin-splashscreen": "^5.0.2",
     "cordova-plugin-whitelist": "^1.3.3",
-    "ionic-angular": "3.9.2",
-    "ionic-plugin-keyboard": "^2.2.1",
-    "ionicons": "3.0.0",
-    "rxjs": "^5.5.11",
+    "ionic-angular": "3.9.4",
+    "ionicons": "^4.5.5",
+    "rxjs": "^5.5.12",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.29"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "3.2.2",
+    "@ionic/app-scripts": "3.2.3",
     "typescript": "~2.6.2"
   },
   "description": "An Ionic project",
   "cordova": {
     "plugins": {
-      "ionic-plugin-keyboard": {},
       "cordova-plugin-whitelist": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-googlemaps": {
-        "API_KEY_FOR_ANDROID": "...................",
-        "API_KEY_FOR_IOS": "..................",
+        "API_KEY_FOR_ANDROID": "<YOUR_ANDROID_KEY>",
+        "API_KEY_FOR_IOS": "<YOUR_IOS_KEY>",
         "PLAY_SERVICES_VERSION": "15.0.1",
+        "LOCATION_WHEN_IN_USE_DESCRIPTION": "This app wants to get your location while this app runs only.",
+        "LOCATION_ALWAYS_USAGE_DESCRIPTION": "This app wants to get your location always, even this app runs in background.",
         "ANDROID_SUPPORT_V4_VERSION": "27.1.1"
       }
     },
     "platforms": [
       "android",
-      "browser"
+      "browser",
+      "ios"
     ]
   }
 }
